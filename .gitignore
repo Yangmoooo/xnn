@@ -1,0 +1,9 @@
+data/
+
+*.o
+*.out
+*.exe
+
+__pycache__/
+
+GEMINI.md
