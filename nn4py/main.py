@@ -91,17 +91,23 @@ def main():
             probabilities = softmax(final_z)
 
             # 计算交叉熵损失
-            # 正确计算批次的损失
+            # 计算 batch 的损失，提取出真实标签对应的预测概率，然后取负对数
             log_probs = -np.log(
                 probabilities[range(len(label_batch)), label_batch] + 1e-10
             )
             total_loss += np.sum(log_probs)
 
             # 反向传播
-            # 为批次创建 one-hot 编码向量
+            # probabilities 是网络预测的概率分布，如 [0.1, 0.8, 0.05, ...]
+            # one_hot_labels 是真实标签的独热编码，如 [0, 0, 1, ...] 表示真实标签是 2
             one_hot_labels = np.zeros_like(probabilities)
             one_hot_labels[range(len(label_batch)), label_batch] = 1
 
+            # 梯度实际上是 **一个高维的切向量**，其指向函数值变化最快的方向，大小就是高维的斜率
+            # output_grad 就是输出层的梯度，即总损失对线性输出 Z 的梯度
+            # 两者相减实际上是 Softmax 与 CrossEntropyLoss 的复合函数的导数
+            # 若某个输出神经元对应的不是真实标签，但预测概率很高，如 0.8 - 0 = 0.8，梯度为正，表明推高了损失，需要降低
+            # 若对应的是真实标签，但预测概率很低，如 0.1 - 1 = -0.9，梯度为负，拉低了正确分类的信心，需要提高
             output_grad = probabilities - one_hot_labels
 
             network.backward(
