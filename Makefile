@@ -7,10 +7,12 @@ PYTHON := python3
 
 # Project directories
 C_DIR := nn4c
-PY_DIR := nn4py
+NUMPY_DIR := nn4numpy
+TORCH_DIR := nn4torch
 RUST_DIR := nn4rs
 
-PY_SCRIPT := $(PY_DIR)/main.py
+NUMPY_SCRIPT := $(NUMPY_DIR)/main.py
+TORCH_SCRIPT := $(TORCH_DIR)/main.py
 
 # C compilation flags
 CFLAGS := -O3 -march=native -ffast-math -Wall -Wextra -pedantic
@@ -49,7 +51,7 @@ C_TARGET := $(C_DIR)/main$(EXT)
 # =============================================================================
 # === PHONY TARGETS (Actions that don't create files)
 # =============================================================================
-.PHONY: all help build-c run-c clean-c build-py run-py clean-py build-rs run-rs clean-rs clean
+.PHONY: all help build-c run-c clean-c build-rs run-rs clean-rs clean
 
 
 # =============================================================================
@@ -69,9 +71,13 @@ help:
 	@echo "  run-c        Run the C executable."
 	@echo "  clean-c      Clean the C project artifacts (.o files and executable)."
 	@echo ""
-	@echo "Python Project (nn4py):"
-	@echo "  run-py       Run the Python script."
-	@echo "  clean-py     Clean Python cache files."
+	@echo "Python Project (nn4numpy):"
+	@echo "  run-numpy    Run the Python script."
+	@echo "  clean-numpy  Clean Python cache files."
+	@echo ""
+	@echo "Python Project (nn4torch):"
+	@echo "  run-torch    Run the Python script."
+	@echo "  clean-torch  Clean Python cache files."
 	@echo ""
 	@echo "Rust Project (nn4rs):"
 	@echo "  build-rs     Build the Rust project (release mode)."
@@ -81,11 +87,11 @@ help:
 
 all: build-c build-rs
 
-clean: clean-c clean-py clean-rs
+clean: clean-c clean-numpy clean-torch clean-rs
 
 
 # =============================================================================
-# === C LANGUAGE TARGETS (Incremental Compilation)
+# === C TARGETS
 # =============================================================================
 
 build-c: $(C_TARGET)
@@ -111,22 +117,32 @@ endif
 
 
 # =============================================================================
-# === PYTHON & RUST TARGETS
+# === PYTHON TARGETS
 # =============================================================================
 
-run-py: $(PY_SCRIPT)
-	@echo "Running Python script..."
-	$(PYTHON) $(PY_SCRIPT)
+# Generic rules for Python projects (e.g., numpy, torch)
+PY_PROJECTS := numpy torch
+RUN_PY_TARGETS := $(foreach proj,$(PY_PROJECTS),run-$(proj))
+CLEAN_PY_TARGETS := $(foreach proj,$(PY_PROJECTS),clean-$(proj))
 
-clean-py:
-	@echo "Cleaning Python project..."
+.PHONY: $(RUN_PY_TARGETS) $(CLEAN_PY_TARGETS)
+
+$(RUN_PY_TARGETS): run-%:
+	@echo "Running $* implementation..."
+	@$(PYTHON) nn4$*/main.py
+
+$(CLEAN_PY_TARGETS): clean-%:
+	@echo "Cleaning $* project..."
 ifeq ($(OS),Windows_NT)
-	if exist $(PY_DIR)\\*.pyc $(RM) $(PY_DIR)\\*.pyc
-	if exist $(PY_DIR)\\__pycache__ rmdir /S /Q $(PY_DIR)\\__pycache__
+	if exist nn4$*\__pycache__ rmdir /S /Q nn4$*\__pycache__
 else
-	find $(PY_DIR) -type f -name "*.pyc" -delete
-	find $(PY_DIR) -type d -name "__pycache__" -exec rm -rf {} +
+	find nn4$* -type d -name "__pycache__" -exec rm -rf {} +
 endif
+
+
+# =============================================================================
+# === RUST TARGETS
+# =============================================================================
 
 build-rs:
 	@echo "Building Rust project..."
