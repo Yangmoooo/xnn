@@ -1,8 +1,12 @@
+.vscode/
+
 data/
 
 *.o
 *.out
 *.exe
+.cache/
+compile_commands.json
 
 __pycache__/
 

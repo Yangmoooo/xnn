@@ -2,7 +2,7 @@
 
 这是一个从零开始、使用多种语言构建神经网络的学习项目
 
-旨在通过亲手实现核心算法，深入理解其底层工作原理，并对比不同语言在实现上的差异
+旨在通过亲手实现核心算法，深入理解其底层工作原理
 
 ## 项目结构
 
@@ -11,12 +11,13 @@
 ├── Makefile      # 构建和运行入口
 ├── data/         # 数据集
 ├── nn4c/         # C 实现
-├── nn4py/        # Python 实现
-└── nn4rs/        # Rust 实现
+├── nn4numpy/     # Python 实现（基于 NumPy）
+└── nn4torch/     # Python 实现（基于 PyTorch）
 ```
 
-- **`nn4c` (C)**: 仅依赖标准库，大幅参考了 [miniMNIST-c](https://github.com/konrad-gajdus/miniMNIST-c/) 的实现
-- **`nn4py` (Python)**: 基于 `NumPy` 的实现，注释详细，功能完善
+- **`nn4c`**: 仅依赖标准库，大幅参考了 [miniMNIST-c](https://github.com/konrad-gajdus/miniMNIST-c/) 的实现
+- **`nn4numpy`**: 基于 `NumPy` 的实现，注释详细，功能完善
+- **`nn4torch`**: 基于 `PyTorch` 的实现，高度抽象，代码简洁
 - **`Makefile`**: 统一管理所有的编译、运行和清理任务
 
 ## 当前实现与特性
@@ -35,9 +36,9 @@
   - 使用**交叉熵损失**作为损失函数
   - 使用**带动量的梯度下降**进行优化
 
-### nn4py
+### nn4numpy
 
-由 `nn4c` 重写而来，借助 `NumPy` 实现，代码简洁，逻辑上更清晰，易于理解
+由 `nn4c` 重写而来，基于 `NumPy` 实现，代码清晰，注释详尽，易于理解
 
 - **网络架构**:
   - 包含 **两个隐藏层** 的多层感知机
@@ -48,11 +49,10 @@
   - 使用**带动量的梯度下降**进行优化
   - 集成 **Dropout** 正则化
 
+### nn4torch
+
+根据 `nn4numpy` 重写，基于 `PyTorch` 实现，大量使用封装的 API，代码简洁，性能更优，功能和结构上与 `nn4numpy` 保持一致
+
 ## 如何运行
 
 项目通过根目录的 `Makefile` 统一管理
-
-## Next
-
-- [ ] PyTorch 版本
-- [ ] Rust 版本

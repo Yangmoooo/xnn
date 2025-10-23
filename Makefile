@@ -2,20 +2,18 @@
 # === GENERAL CONFIGURATION
 # =============================================================================
 CC := clang
-CARGO := cargo
 PYTHON := python3
 
 # Project directories
 C_DIR := nn4c
 NUMPY_DIR := nn4numpy
 TORCH_DIR := nn4torch
-RUST_DIR := nn4rs
 
 NUMPY_SCRIPT := $(NUMPY_DIR)/main.py
 TORCH_SCRIPT := $(TORCH_DIR)/main.py
 
 # C compilation flags
-CFLAGS := -O3 -march=native -ffast-math -Wall -Wextra -pedantic
+CFLAGS := -O3 -march=native -ffast-math -Wall -Wextra -pedantic -I$(C_DIR)/inc
 
 
 # =============================================================================
@@ -49,9 +47,9 @@ C_TARGET := $(C_DIR)/main$(EXT)
 
 
 # =============================================================================
-# === PHONY TARGETS (Actions that don't create files)
+# === PHONY TARGETS
 # =============================================================================
-.PHONY: all help build-c run-c clean-c build-rs run-rs clean-rs clean
+.PHONY: all help build-c run-c clean-c clean
 
 
 # =============================================================================
@@ -78,16 +76,11 @@ help:
 	@echo "Python Project (nn4torch):"
 	@echo "  run-torch    Run the Python script."
 	@echo "  clean-torch  Clean Python cache files."
-	@echo ""
-	@echo "Rust Project (nn4rs):"
-	@echo "  build-rs     Build the Rust project (release mode)."
-	@echo "  run-rs       Run the Rust project (release mode)."
-	@echo "  clean-rs     Clean the Rust project."
 	@echo "--------------------------------------------------"
 
-all: build-c build-rs
+all: build-c
 
-clean: clean-c clean-numpy clean-torch clean-rs
+clean: clean-c clean-numpy clean-torch
 
 
 # =============================================================================
@@ -138,20 +131,3 @@ ifeq ($(OS),Windows_NT)
 else
 	find nn4$* -type d -name "__pycache__" -exec rm -rf {} +
 endif
-
-
-# =============================================================================
-# === RUST TARGETS
-# =============================================================================
-
-build-rs:
-	@echo "Building Rust project..."
-	$(CARGO) build --release --manifest-path $(RUST_DIR)/Cargo.toml
-
-run-rs:
-	@echo "Running Rust project..."
-	$(CARGO) run --release --manifest-path $(RUST_DIR)/Cargo.toml
-
-clean-rs:
-	@echo "Cleaning Rust project..."
-	$(CARGO) clean --manifest-path $(RUST_DIR)/Cargo.toml
