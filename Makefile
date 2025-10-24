@@ -13,7 +13,7 @@ NUMPY_SCRIPT := $(NUMPY_DIR)/main.py
 TORCH_SCRIPT := $(TORCH_DIR)/main.py
 
 # C compilation flags
-CFLAGS := -O3 -march=native -ffast-math -Wall -Wextra -pedantic -I$(C_DIR)/inc
+CFLAGS := -O3 -march=native -ffast-math -Wall -Wextra -pedantic -I$(C_DIR)/include
 
 
 # =============================================================================
@@ -49,7 +49,7 @@ C_TARGET := $(C_DIR)/main$(EXT)
 # =============================================================================
 # === PHONY TARGETS
 # =============================================================================
-.PHONY: all help build-c run-c clean-c clean
+.PHONY: all help build-c run-c clean-c run-numpy clean-numpy run-torch clean-torch clean
 
 
 # =============================================================================
@@ -60,14 +60,14 @@ help:
 	@echo "Usage: make [TARGET]"
 	@echo "--------------------------------------------------"
 	@echo "High-Level Targets:"
-	@echo "  all          Build all compilable projects (C, Rust)."
+	@echo "  all          Build all compilable projects."
 	@echo "  clean        Remove all build artifacts."
 	@echo "  help         Show this help message."
 	@echo ""
 	@echo "C Project (nn4c):"
 	@echo "  build-c      Compile the C project."
 	@echo "  run-c        Run the C executable."
-	@echo "  clean-c      Clean the C project artifacts (.o files and executable)."
+	@echo "  clean-c      Clean the C project artifacts."
 	@echo ""
 	@echo "Python Project (nn4numpy):"
 	@echo "  run-numpy    Run the Python script."
@@ -113,21 +113,26 @@ endif
 # === PYTHON TARGETS
 # =============================================================================
 
-# Generic rules for Python projects (e.g., numpy, torch)
-PY_PROJECTS := numpy torch
-RUN_PY_TARGETS := $(foreach proj,$(PY_PROJECTS),run-$(proj))
-CLEAN_PY_TARGETS := $(foreach proj,$(PY_PROJECTS),clean-$(proj))
+run-numpy:
+	@echo "Running numpy implementation..."
+	@$(PYTHON) $(NUMPY_SCRIPT)
 
-.PHONY: $(RUN_PY_TARGETS) $(CLEAN_PY_TARGETS)
-
-$(RUN_PY_TARGETS): run-%:
-	@echo "Running $* implementation..."
-	@$(PYTHON) nn4$*/main.py
-
-$(CLEAN_PY_TARGETS): clean-%:
-	@echo "Cleaning $* project..."
+clean-numpy:
+	@echo "Cleaning numpy project..."
 ifeq ($(OS),Windows_NT)
-	if exist nn4$*\__pycache__ rmdir /S /Q nn4$*\__pycache__
+	if exist $(subst /,\,$(NUMPY_DIR)\__pycache__) rmdir /S /Q $(subst /,\,$(NUMPY_DIR)\__pycache__)
 else
-	find nn4$* -type d -name "__pycache__" -exec rm -rf {} +
+	find $(NUMPY_DIR) -type d -name "__pycache__" -exec rm -rf {} +
+endif
+
+run-torch:
+	@echo "Running torch implementation..."
+	@$(PYTHON) $(TORCH_SCRIPT)
+
+clean-torch:
+	@echo "Cleaning torch project..."
+ifeq ($(OS),Windows_NT)
+	if exist $(subst /,\,$(TORCH_DIR)\__pycache__) rmdir /S /Q $(subst /,\,$(TORCH_DIR)\__pycache__)
+else
+	find $(TORCH_DIR) -type d -name "__pycache__" -exec rm -rf {} +
 endif
