@@ -2,7 +2,7 @@
 # === GENERAL CONFIGURATION
 # =============================================================================
 CC := clang
-PYTHON := python3
+PYTHON := python
 
 # Project directories
 C_DIR := nn4c
