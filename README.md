@@ -8,7 +8,7 @@
 
 ```plain
 .
-├── Makefile      # 构建和运行入口
+├── justfile      # 构建和运行入口
 ├── data/         # 数据集
 ├── nn4c/         # C 实现
 ├── nn4numpy/     # Python 实现（基于 NumPy）
@@ -55,4 +55,4 @@
 
 ## 如何运行
 
-项目通过根目录的 `Makefile` 统一管理
+项目通过根目录的 `justfile` 统一管理
