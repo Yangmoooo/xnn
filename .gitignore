@@ -1,13 +1,13 @@
-.vscode/
-
 data/
 
 *.o
+*.d
 *.out
 *.exe
 .cache/
 compile_commands.json
 
 __pycache__/
+.venv/
 
-GEMINI.md
+AGENTS.md

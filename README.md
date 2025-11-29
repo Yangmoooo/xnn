@@ -8,7 +8,6 @@
 
 ```plain
 .
-├── justfile      # 构建和运行入口
 ├── data/         # 数据集
 ├── nn4c/         # C 实现
 ├── nn4numpy/     # Python 实现（基于 NumPy）
@@ -18,7 +17,6 @@
 - **`nn4c`**: 仅依赖标准库，大幅参考了 [miniMNIST-c](https://github.com/konrad-gajdus/miniMNIST-c/) 的实现
 - **`nn4numpy`**: 基于 `NumPy` 的实现，注释详细，功能完善
 - **`nn4torch`**: 基于 `PyTorch` 的实现，高度抽象，代码简洁
-- **`Makefile`**: 统一管理所有的编译、运行和清理任务
 
 ## 当前实现与特性
 
@@ -55,4 +53,5 @@
 
 ## 如何运行
 
-项目通过根目录的 `justfile` 统一管理
+- **C**: `cd nn4c && make run`
+- **Python**: `cd nn4numpy && uv run main.py`
