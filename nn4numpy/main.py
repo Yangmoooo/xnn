@@ -13,8 +13,8 @@ EPOCHS = 50
 BATCH_SIZE = 64
 DROPOUT_RATE = 0.5
 TRAIN_SPLIT = 0.8
-TRAIN_CSV_PATH = "./data/fashion-mnist/fashion-mnist_train.csv"
-TEST_CSV_PATH = "./data/fashion-mnist/fashion-mnist_test.csv"
+TRAIN_CSV_PATH = "../data/fashion-mnist/fashion-mnist_train.csv"
+TEST_CSV_PATH = "../data/fashion-mnist/fashion-mnist_test.csv"
 
 
 def evaluate(network, images, labels, batch_size):
