@@ -1,6 +1,6 @@
 CFLAGS := -O3 -march=native -ffast-math
 CFLAGS += -Wall -Wextra -pedantic
-CFLAGS += -Inn4c/include
+CFLAGS += -Iinclude -MMD -MP
 
 ifeq ($(OS),Windows_NT)
 	# MinGW gcc performs much better than LLVM clang in optimization on Windows
@@ -13,17 +13,26 @@ else
 	LDLIBS := -lm
 endif
 
-C_TARGET := nn4c/main$(EXT)
+BUILD_DIR  := build
+C_TARGET   := $(BUILD_DIR)/main$(EXT)
+C_SRCS     := $(wildcard *.c)
+C_OBJS     := $(patsubst %.c,$(BUILD_DIR)/%.o,$(C_SRCS))
+DEPS       := $(C_OBJS:.o=.d)
 
-C_SRCS := $(wildcard nn4c/*.c)
-C_OBJS := $(patsubst nn4c/%.c,nn4c/%.o,$(C_SRCS))
-
-.PHONY: all
+.PHONY: all run clean
 
 all: $(C_TARGET)
 
 $(C_TARGET): $(C_OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
 
-nn4c/%.o: nn4c/%.c
+$(BUILD_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
+
+-include $(DEPS)
+
+run: $(C_TARGET)
+	./$(C_TARGET)
+
+clean:
+	rm -rf $(BUILD_DIR)/*.o $(BUILD_DIR)/*.d $(C_TARGET)

@@ -13,8 +13,8 @@
 #define LEARNING_RATE 0.0005f
 #define EPOCHS 20
 #define TRAIN_SPLIT 0.8
-#define TRAIN_CSV_PATH "./data/fashion-mnist/fashion-mnist_train.csv"
-#define TEST_CSV_PATH "./data/fashion-mnist/fashion-mnist_test.csv"
+#define TRAIN_CSV_PATH "../data/fashion-mnist/fashion-mnist_train.csv"
+#define TEST_CSV_PATH "../data/fashion-mnist/fashion-mnist_test.csv"
 
 float* train(Network* net, float* input, int32_t label, float lr)
 {
