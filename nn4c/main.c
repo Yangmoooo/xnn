@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <xmmintrin.h>
+#include <pmmintrin.h>
 
 #include "dataset.h"
 #include "model.h"
@@ -80,6 +82,10 @@ float evaluate(Network* net, InputData* data)
 
 int main(void)
 {
+    // 手动开启 SSE 单元的 FTZ/DAZ 标志
+    // 使权重或梯度等在过小而进入非规格化浮点数范围后被视为零，避免性能下降
+    _mm_setcsr(_mm_getcsr() | 0x8000 | 0x0040);
+
     srand(time(NULL));
 
     // --- Data Loading ---
