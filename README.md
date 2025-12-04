@@ -53,5 +53,12 @@
 
 ## 如何运行
 
-- **C**: `cd nn4c && make run`
-- **Python**: `cd nn4numpy && uv run main.py`
+```sh
+# C
+cd nn4c
+make run  # or zig build run -Doptimize=ReleaseFast
+
+# Python
+cd nn4numpy
+python main.py  # or uv run main.py
+```

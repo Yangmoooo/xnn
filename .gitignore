@@ -2,10 +2,11 @@ data/
 
 *.o
 *.d
+*.pdb
 *.out
 *.exe
-.cache/
-compile_commands.json
+compile_flags.txt
+.zig-cache/
 
 __pycache__/
 .venv/
