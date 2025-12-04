@@ -23,7 +23,7 @@ void init_layer(Layer* layer, int32_t in_size, int32_t out_size)
     }
 }
 
-void forward_relu(Layer* layer, float* input, float* output)
+void forward_relu(Layer* restrict layer, float* restrict input, float* restrict output)
 {
     for (int32_t i = 0; i < layer->output_size; i++) {
         output[i] = layer->biases[i];
@@ -43,7 +43,7 @@ void forward_relu(Layer* layer, float* input, float* output)
     }
 }
 
-void forward_linear(Layer* layer, float* input, float* output)
+void forward_linear(Layer* restrict layer, float* restrict input, float* restrict output)
 {
     for (int32_t i = 0; i < layer->output_size; i++) {
         output[i] = layer->biases[i];
@@ -58,7 +58,8 @@ void forward_linear(Layer* layer, float* input, float* output)
     }
 }
 
-void backward(Layer* layer, float* input, float* output_grad, float* input_grad, float lr)
+void backward(Layer* restrict layer, float* restrict input, float* restrict output_grad, float* restrict input_grad,
+              float lr)
 {
     if (input_grad) {
         for (int32_t j = 0; j < layer->input_size; j++) {

@@ -16,6 +16,7 @@ typedef struct {
 
 void init_layer(Layer* layer, int32_t in_size, int32_t out_size);
 
-void forward_relu(Layer* layer, float* input, float* output);
-void forward_linear(Layer* layer, float* input, float* output);
-void backward(Layer* layer, float* input, float* output_grad, float* input_grad, float lr);
+void forward_relu(Layer* restrict layer, float* restrict input, float* restrict output);
+void forward_linear(Layer* restrict layer, float* restrict input, float* restrict output);
+void backward(Layer* restrict layer, float* restrict input, float* restrict output_grad, float* restrict input_grad,
+              float lr);
