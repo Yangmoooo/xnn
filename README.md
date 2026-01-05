@@ -8,7 +8,7 @@
 
 ```plain
 .
-├── data/         # 数据集
+├── data/         # 数据集，来自 kaggle 的 Fashion-MNIST CSV 数据
 ├── nn4c/         # C 实现
 ├── nn4numpy/     # Python 实现（基于 NumPy）
 └── nn4torch/     # Python 实现（基于 PyTorch）
