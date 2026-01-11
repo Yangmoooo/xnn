@@ -39,8 +39,8 @@ class Network:
         如果在训练模式下，则启用 dropout
         """
         # 隐藏层 1
-        # 线性变换后用 ReLU 激活，即线性输出为 Z = W @ X + b，激活后为 output = ReLU(Z)
-        hidden1_z = self.hidden_layer1.weights @ input_data + self.hidden_layer1.biases
+        # 线性变换后用 ReLU 激活，即线性输出为 Z = X @ w + b，激活后为 output = ReLU(Z)
+        hidden1_z = input_data @ self.hidden_layer1.weights + self.hidden_layer1.biases
         hidden1_output = np.maximum(0, hidden1_z)
         if training:
             # Inverted Dropout
@@ -55,7 +55,7 @@ class Network:
 
         # 隐藏层 2
         hidden2_z = (
-            self.hidden_layer2.weights @ hidden1_output + self.hidden_layer2.biases
+            hidden1_output @ self.hidden_layer2.weights + self.hidden_layer2.biases
         )
         hidden2_output = np.maximum(0, hidden2_z)
         if training:
@@ -65,7 +65,7 @@ class Network:
             hidden2_output *= self.U2
 
         # 输出层
-        final_z = self.output_layer.weights @ hidden2_output + self.output_layer.biases
+        final_z = hidden2_output @ self.output_layer.weights + self.output_layer.biases
 
         return hidden1_output, hidden2_output, final_z
 
