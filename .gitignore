@@ -6,6 +6,7 @@ data/
 *.out
 *.exe
 compile_flags.txt
+zig-out/
 .zig-cache/
 
 __pycache__/

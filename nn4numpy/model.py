@@ -40,9 +40,7 @@ class Network:
         """
         # 隐藏层 1
         # 线性变换后用 ReLU 激活，即线性输出为 Z = W @ X + b，激活后为 output = ReLU(Z)
-        hidden1_z = (
-            np.dot(input_data, self.hidden_layer1.weights) + self.hidden_layer1.biases
-        )
+        hidden1_z = self.hidden_layer1.weights @ input_data + self.hidden_layer1.biases
         hidden1_output = np.maximum(0, hidden1_z)
         if training:
             # Inverted Dropout
@@ -50,27 +48,24 @@ class Network:
             # 然后与 dropout 率比较，按照概率得到掩码布尔矩阵，即每个神经元是否会被保留
             # 接着计算缩放比例，因为部分神经元被丢弃，所以需要强化被保留的神经元，以保持输出的期望值不变
             # 最后将输出乘以掩码，实现 dropout 效果
-            self.U1 = (np.random.rand(*hidden1_output.shape) > self.dropout_rate) / (
+            self.U1 = (np.random.random(hidden1_output.shape) > self.dropout_rate) / (
                 1.0 - self.dropout_rate
             )
             hidden1_output *= self.U1
 
         # 隐藏层 2
         hidden2_z = (
-            np.dot(hidden1_output, self.hidden_layer2.weights)
-            + self.hidden_layer2.biases
+            self.hidden_layer2.weights @ hidden1_output + self.hidden_layer2.biases
         )
         hidden2_output = np.maximum(0, hidden2_z)
         if training:
-            self.U2 = (np.random.rand(*hidden2_output.shape) > self.dropout_rate) / (
+            self.U2 = (np.random.random(hidden2_output.shape) > self.dropout_rate) / (
                 1.0 - self.dropout_rate
             )
             hidden2_output *= self.U2
 
         # 输出层
-        final_z = (
-            np.dot(hidden2_output, self.output_layer.weights) + self.output_layer.biases
-        )
+        final_z = self.output_layer.weights @ hidden2_output + self.output_layer.biases
 
         return hidden1_output, hidden2_output, final_z
 
